@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stylish Pet Game</title>
+    <title>Enhanced Pet Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,7 +26,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #actions, #stats {
+        #actions, #stats, #info {
             display: none;
             margin-top: 20px;
         }
@@ -70,7 +70,7 @@
 </head>
 <body>
 
-<h1>Stylish Pet Game</h1>
+<h1>Enhanced Pet Game</h1>
 
 <select id="petType">
     <option value="cat">Cat</option>
@@ -78,14 +78,29 @@
 </select>
 <button onclick="adoptPet()">Adopt a Pet</button>
 
+<div id="info">
+    <p>Age: <span id="petAge">0</span> days</p>
+    <p>Mood: <span id="petMood">Neutral</span></p>
+</div>
+
 <div id="stats">
     <div>Health: <div class="meter"><div id="healthMeter" class="meter-value"></div></div></div>
     <div>Happiness: <div class="meter"><div id="happinessMeter" class="meter-value"></div></div></div>
 </div>
 
 <div id="actions">
+    <select id="foodType">
+        <option value="normal">Normal Food</option>
+        <option value="premium">Premium Food</option>
+    </select>
     <button onclick="feedPet()">Feed</button>
+
+    <select id="toyType">
+        <option value="ball">Ball</option>
+        <option value="string">String</option>
+    </select>
     <button onclick="playWithPet()">Play</button>
+
     <button onclick="petPet()">Pet</button>
     <button onclick="walkPet()">Walk</button>
     <button onclick="cleanPet()">Clean</button>
@@ -100,34 +115,74 @@
 
 <script>
     let pet = null;
+    let ageInterval = null;
+    let eventInterval = null;
 
     function adoptPet() {
         const petType = document.getElementById('petType').value;
         pet = {
             type: petType,
             health: 100,
-            happiness: 50
+            happiness: 50,
+            age: 0
         };
         document.getElementById('pet').src = petType + ".png";
         document.getElementById('pet').style.display = 'block';
         document.getElementById('actions').style.display = 'block';
         document.getElementById('stats').style.display = 'block';
+        document.getElementById('info').style.display = 'block';
         updateStats();
+
+        ageInterval = setInterval(() => {
+            pet.age += 1;
+            document.getElementById('petAge').innerText = pet.age;
+        }, 60000);
+
+        eventInterval = setInterval(randomEvent, 120000);
+    }
+
+    function randomEvent() {
+        const chance = Math.random();
+        if (chance < 0.2) {
+            pet.health -= 20;
+            alert('Oh no! Your pet is feeling sick.');
+            updateStats();
+        }
     }
 
     function updateStats() {
         document.getElementById('healthMeter').style.width = pet.health + "%";
         document.getElementById('happinessMeter').style.width = pet.happiness + "%";
+
+        const moodElement = document.getElementById('petMood');
+        if (pet.health > 70 && pet.happiness > 70) {
+            moodElement.innerText = 'Happy';
+        } else if (pet.health > 40 && pet.happiness > 40) {
+            moodElement.innerText = 'Neutral';
+        } else {
+            moodElement.innerText = 'Sad';
+        }
     }
 
     function feedPet() {
-        pet.health += 10;
-        pet.happiness += 5;
+        const foodType = document.getElementById('foodType').value;
+        if (foodType === 'premium') {
+            pet.health += 20;
+            pet.happiness += 10;
+        } else {
+            pet.health += 10;
+            pet.happiness += 5;
+        }
         updateStats();
     }
 
     function playWithPet() {
-        pet.happiness += 15;
+        const toyType = document.getElementById('toyType').value;
+        if (toyType === 'ball') {
+            pet.happiness += 20;
+        } else {
+            pet.happiness += 15;
+        }
         pet.health -= 5;
         updateStats();
     }
