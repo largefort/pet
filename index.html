@@ -145,6 +145,9 @@
     }
 
     function updateStats() {
+        pet.health = Math.min(pet.health, 100);
+        pet.happiness = Math.min(pet.happiness, 100);
+
         document.getElementById('healthMeter').style.width = pet.health + "%";
         document.getElementById('happinessMeter').style.width = pet.happiness + "%";
 
