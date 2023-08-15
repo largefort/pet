@@ -4,69 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Pet Game</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f7f9fc;
-            color: #333;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        #pet {
-            width: 150px;
-            display: none;
-            margin: 20px auto;
-            transition: transform 0.5s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        #actions, #stats, #info {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .meter {
-            width: 100%;
-            background-color: #e0e0e0;
-            margin-top: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .meter-value {
-            height: 20px;
-            width: 0;
-            background-color: #4CAF50;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
 
@@ -137,6 +74,7 @@
         ageInterval = setInterval(() => {
             pet.age += 1;
             document.getElementById('petAge').innerText = pet.age;
+            savePetData();
         }, 60000);
 
         eventInterval = setInterval(randomEvent, 120000);
@@ -144,7 +82,8 @@
         happinessDecreaseInterval = setInterval(() => {
             pet.happiness -= 1;
             updateStats();
-        }, 30000); // Decrease happiness by 1 every 30 seconds
+            savePetData();
+        }, 30000);
     }
 
     function randomEvent() {
@@ -153,6 +92,7 @@
             pet.health -= 20;
             alert('Oh no! Your pet is feeling sick.');
             updateStats();
+            savePetData();
         }
     }
 
@@ -170,6 +110,23 @@
         }
     }
 
+    function savePetData() {
+        localStorage.setItem('pet', JSON.stringify(pet));
+    }
+
+    function loadPetData() {
+        const savedPet = localStorage.getItem('pet');
+        if (savedPet) {
+            pet = JSON.parse(savedPet);
+            document.getElementById('pet').src = pet.type + ".png";
+            document.getElementById('pet').style.display = 'block';
+            document.getElementById('actions').style.display = 'block';
+            document.getElementById('stats').style.display = 'block';
+            document.getElementById('info').style.display = 'block';
+            updateStats();
+        }
+    }
+
     function feedPet() {
         const foodType = document.getElementById('foodType').value;
         if (foodType === 'premium') {
@@ -180,6 +137,7 @@
             pet.happiness += 5;
         }
         updateStats();
+        savePetData();
     }
 
     function playWithPet() {
@@ -191,11 +149,13 @@
         }
         pet.health -= 5;
         updateStats();
+        savePetData();
     }
 
     function petPet() {
         pet.happiness += 10;
         updateStats();
+        savePetData();
     }
 
     function walkPet() {
@@ -203,12 +163,14 @@
         pet.happiness += 20;
         pet.health += 5;
         updateStats();
+        savePetData();
     }
 
     function cleanPet() {
         document.getElementById('cleanSound').play();
         pet.health += 15;
         updateStats();
+        savePetData();
     }
 
     function sleepPet() {
@@ -216,7 +178,10 @@
         pet.health += 20;
         pet.happiness -= 10;
         updateStats();
+        savePetData();
     }
+
+    window.onload = loadPetData;
 </script>
 
 </body>
