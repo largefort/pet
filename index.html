@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
             text-align: center;
+            padding: 20px;
         }
         h1 {
             color: #4a90e2;
@@ -48,8 +49,14 @@
         }
         img {
             display: none;
-            width: 150px;
+            width: 100%;
+            max-width: 150px;
             margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            select, button {
+                width: 100%;
+            }
         }
     </style>
 </head>
