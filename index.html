@@ -58,6 +58,27 @@
                 width: 100%;
             }
         }
+        .tutorial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .tutorial-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .tutorial-button {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +125,14 @@
 <audio id="walkSound" src="walk.mp3"></audio>
 <audio id="cleanSound" src="clean.mp3"></audio>
 <audio id="sleepSound" src="sleep.mp3"></audio>
+
+<div class="tutorial" id="tutorial">
+    <div class="tutorial-content">
+        <h2>Welcome to the Pet Game!</h2>
+        <p>Adopt a pet, feed it, play with it, and take care of it to keep it happy and healthy.</p>
+        <button class="tutorial-button" onclick="closeTutorial()">Got it!</button>
+    </div>
+</div>
 
 <script>
     let pet = null;
@@ -238,6 +267,10 @@
         pet.happiness -= 10;
         updateStats();
         savePetData();
+    }
+
+    function closeTutorial() {
+        document.getElementById('tutorial').style.display = 'none';
     }
 
     window.onload = loadPetData;
